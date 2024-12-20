@@ -8,7 +8,7 @@ on:
 
 jobs:
   run-notebook:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Explicitly pin to ubuntu-22.04 to avoid unexpected changes
 
     steps:
       # Step 1: Checkout the repository
@@ -30,6 +30,11 @@ jobs:
       - name: Configure Google Credentials
         run: |
           echo "${{ secrets.CREDS_JSON }}" > creds.json
+
+      # Step 5: Run the Python script
+      - name: Run Gather Script
+        run: python gather.py
+
 
       # Step 5: Run the Python script
       - name: Run Gather Script
