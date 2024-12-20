@@ -1,0 +1,36 @@
+name: Gather Notebook Scheduler
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # Runs at 7:00 AM UTC
+    - cron: "0 22 * * *" # Runs at 10:00 PM UTC
+  workflow_dispatch: # Enables manual runs
+
+jobs:
+  run-notebook:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: |
+          pip install nbconvert pandas gspread google-auth google-auth-oauthlib google-auth-httplib2
+
+      # Step 4: Configure Google Credentials using CREDS_JSON secret
+      - name: Configure Google Credentials
+        run: |
+          echo "${{ secrets.CREDS_JSON }}" > creds.json
+
+      # Step 5: Run the Python script
+      - name: Run Gather Script
+        run: python gather.py
